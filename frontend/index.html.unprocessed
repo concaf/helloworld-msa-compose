@@ -1,0 +1,221 @@
+<!--
+   JBoss, Home of Professional Open Source
+   Copyright 2016, Red Hat, Inc. and/or its affiliates, and individual
+   contributors by the @authors tag. See the copyright.txt in the
+   distribution for a full listing of individual contributors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+   http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Microservices Frontend</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- PatternFly Styles -->
+<!-- Note: No other CSS files are needed regardless of what other JS packages located in patternfly/components that you decide to pull in -->
+<link rel="stylesheet" href="node_modules/patternfly/dist/css/patternfly.min.css" />
+<link rel="stylesheet" href="node_modules/patternfly/dist/css/patternfly-additions.min.css" />
+
+<!-- jQuery -->
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+	<!-- Black Header -->
+	<nav class="navbar navbar-default navbar-pf" role="navigation">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="/">Red Hat - Hello world MSA (Microservices Architecture) </a>
+		</div>
+		<!-- Nav tabs -->
+		<ul class="nav navbar-nav navbar-primary" id="mytabs">
+			<li role="presentation" class="active"><a href="#browser">Browser as a client</a></li>
+			<li role="presentation"><a href="#apigateway">API Gateway</a></li>
+			<li role="presentation"><a href="#servicechain">Service chaining</a></li>
+			<li role="presentation"><a href="#hystrix">Hystrix Dashboard</a></li>
+			<li role="presentation"><a href="#zipkin">ZipKin Dashboard</a></li>
+		</ul>
+
+	</nav>
+
+	<div class="container-fluid">
+
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+
+			<!--  Tab Browser Client -->
+			<div role="tabpanel" class="tab-pane active" id="browser">
+				<div class="page-header page-header-bleed-right">
+					<div class="actions pull-right">
+						<a id="refresh-browser" href="#"><span class="pficon pficon-refresh"></span>Refresh Results</a>
+					</div>
+					<h1>Using Browser as a Client</h1>
+				</div>
+
+				<div id="tab-browser-content" style="width: 45%; float: left;">
+					<div class="row">
+						<div class="col-sm-6 ">
+							<!-- Hello Service -->
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title">Hello Service</h3>
+									(JAX-RS / EAP)
+								</div>
+								<div id="hello-service" class="panel-body">Loading....</div>
+							</div>
+						</div>
+						<div class=" col-sm-6 ">
+
+							<!-- Hola Service -->
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title">Hola Service</h3>
+									(JAX-RS / WildFly Swarm)
+								</div>
+								<div id="hola-service" class="panel-body">Loading....</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6 ">
+							<!-- Bonjour Service -->
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title">Bonjour Service</h3>
+									(NodeJS / Express)
+								</div>
+								<div id="bonjour-service" class="panel-body">Loading....</div>
+							</div>
+						</div>
+
+						<div class="col-sm-6 ">
+							<!-- Aloha Service -->
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title">Aloha Service</h3>
+									(Vert.x)
+								</div>
+								<div id="aloha-service" class="panel-body">Loading....</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-6 ">
+							<div id="tab-browser-content">
+								<!-- Namaste Service -->
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title">Namaste Service</h3>
+										(Dropwizard)
+									</div>
+									<div id="namaste-service" class="panel-body">Loading....</div>
+								</div>
+                                <a id="refresh-browser2" href="#"><span class="pficon"></span>Refresh Results</a>
+							</div>
+						</div>
+						<div class="col-sm-6 ">
+							<div id="tab-browser-content">
+								<!-- Olá Service -->
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title">Olá Service</h3>
+										(Spring Boot)
+									</div>
+									<div id="ola-service" class="panel-body">Loading....</div>                                    
+								</div>
+						
+                        	</div>
+						
+                        </div>
+                        
+					</div>
+				</div>
+				<img src="images/browser-client.svg" style="float: right; width: 50%; margin-top: 1em;" />
+			</div>
+
+			<!--  Tab API Gateway -->
+			<div role="tabpanel" class="tab-pane" id="apigateway">
+				<div class="page-header page-header-bleed-right">
+					<div class="actions pull-right">
+						<a href="#" id="refresh-apigateway"><span class="pficon pficon-refresh"></span>Refresh Results</a>
+					</div>
+					<h1>Using an API Gateway</h1>
+				</div>
+				<div id="tab-apigateway-content" style="width: 40%; float: left;">
+					<!-- API Gateway -->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">API Gateway</h3>
+						</div>
+						<div id="api-gateway" class="panel-body">Loading....</div>
+                        
+					</div>
+                    <a href="#" id="refresh-apigateway2"><span class="pficon"></span>Refresh Results</a>
+				</div>
+				<img src="images/api-gateway.svg" style="float: right; width: 50%; margin-top: 1em;" />
+			</div>
+
+			<!--  Tab Service Chaining -->
+			<div role="tabpanel" class="tab-pane" id="servicechain">
+				<div class="page-header page-header-bleed-right">
+					<div class="actions pull-right">
+						<a href="#" id="refresh-chain"><span class="pficon pficon-refresh"></span>Refresh Results</a>
+					</div>
+					<h1>Using Service chaining</h1>
+				</div>
+				<div id="tab-servicechain-content" style="width: 40%; float: left;">
+					<!-- Service Chaining -->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Service Chaining</h3>
+						</div>
+						<div id="service-chain" class="panel-body">Loading....</div>
+					</div>
+                    <a href="#" id="refresh-chain2"><span class="pficon"></span>Refresh Results</a>
+				</div>
+				<img src="images/service-chaining.svg" style="float: right; width: 50%; margin-top: 1em;" />
+			</div>
+
+			<!--  Tab Hystrix Dashaboard -->
+			<div role="tabpanel" class="tab-pane active" id="hystrix">
+				<iframe style="padding-top: 5vh; border: 0; width: 100%; height: 80vh; position: inherit;" id="hystrix-dashboard-iframe"
+					src="http://HYSTRIXDASHBOARDURLPORT/monitor/monitor.html?stream=http%3A%2F%2Fturbine-server%2Fturbine.stream">
+		</iframe>
+			</div>
+
+			<!--  Tab Hystrix Dashaboard -->
+			<div role="tabpanel" class="tab-pane active" id="zipkin">
+				<iframe style="padding-top: 5vh; border: 0; width: 100%; height: 80vh; position: inherit;" id="zipkin-dashboard-iframe"
+					src="http://ZIPKINQUERYURLPORT/"> </iframe>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- Page script -->
+	<script src="scripts/page.js"></script>
+	<!-- Browser-Client script -->
+	<script src="scripts/browser-client.js"></script>
+	<!-- Chain Service script -->
+	<script src="scripts/service-chain.js"></script>
+	<!-- API Gateway script -->
+	<script src="scripts/api-gateway.js"></script>
+</body>
+</html>

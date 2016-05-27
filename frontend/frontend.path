@@ -1,0 +1,196 @@
+diff --git a/Dockerfile b/Dockerfile
+index d6c45c6..a452037 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -1,7 +1,7 @@
+-FROM openshift3/nodejs-010-rhel7
++FROM registry.access.redhat.com/openshift3/nodejs-010-rhel7
+ 
+ ADD . /opt/app-root/src/
+ 
+ EXPOSE 8080
+ 
+-CMD /bin/bash -c 'npm start'
+\ No newline at end of file
++CMD sed -e 's/HYSTRIXDASHBOARDURLPORT/'"$HOSTIP":"$HYSTRIX_DASHBOARD_PORT"'/; s/ZIPKINQUERYURLPORT/'"$HOSTIP"':'"$ZIPKIN_QUERY_PORT"'/' index.html.unprocessed > index.html && /bin/bash -c 'npm start'
+diff --git a/frontend.js b/frontend.js
+index 8f83125..3264f75 100644
+--- a/frontend.js
++++ b/frontend.js
+@@ -18,9 +18,12 @@
+ var express = require('express');
+ var app = express();
+ 
+-
+ app.use('/', express.static('.'));
+ 
++app.get('/env', function (req, res) {
++  res.json({ env: process.env });
++});
++
+ var server = app.listen(8080,  '0.0.0.0', function(){
+   var host = server.address().address
+   var port = server.address().port
+diff --git a/index.html b/index.html
+old mode 100644
+new mode 100755
+index 8cd72a3..8e22c72
+--- a/index.html
++++ b/index.html
+@@ -195,13 +195,14 @@
+ 			<!--  Tab Hystrix Dashaboard -->
+ 			<div role="tabpanel" class="tab-pane active" id="hystrix">
+ 				<iframe style="padding-top: 5vh; border: 0; width: 100%; height: 80vh; position: inherit;" id="hystrix-dashboard-iframe"
+-					src="http://hystrix-dashboard-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/monitor/monitor.html?stream=http%3A%2F%2Fturbine-server%2Fturbine.stream"> </iframe>
++					src="http://192.168.121.142:13378/monitor/monitor.html?stream=http%3A%2F%2Fturbine-server%2Fturbine.stream">
++		</iframe>
+ 			</div>
+ 
+ 			<!--  Tab Hystrix Dashaboard -->
+ 			<div role="tabpanel" class="tab-pane active" id="zipkin">
+ 				<iframe style="padding-top: 5vh; border: 0; width: 100%; height: 80vh; position: inherit;" id="zipkin-dashboard-iframe"
+-					src="http://zipkin-query-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/"> </iframe>
++					src="http://192.168.121.142:13381/"> </iframe>
+ 			</div>
+ 		</div>
+ 	</div>
+@@ -217,4 +218,4 @@
+ 	<!-- API Gateway script -->
+ 	<script src="scripts/api-gateway.js"></script>
+ </body>
+-</html>
+\ No newline at end of file
++</html>
+diff --git a/scripts/api-gateway.js b/scripts/api-gateway.js
+index c7128d7..a552913 100644
+--- a/scripts/api-gateway.js
++++ b/scripts/api-gateway.js
+@@ -13,7 +13,7 @@
+ 
+ function api_gateway() {
+         $.ajax({
+-            url : 'http://api-gateway-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/api',
++            url : 'http://' + env.HOSTIP + ':' + env.API_GATEWAY_PORT  + '/api',
+             cache : false,
+             success : function(data) {
+                 $('#api-gateway').empty();
+@@ -32,5 +32,14 @@ function api_gateway() {
+ };
+ 
+ $(document).ready(function() {
++
++    $.ajax({
++        url: document.URL + 'env',
++        success: function (result) {
++            env = result.env;
++        },
++        async: false
++    });
++
+     api_gateway();
+ });
+diff --git a/scripts/browser-client.js b/scripts/browser-client.js
+index 170969f..811a63b 100644
+--- a/scripts/browser-client.js
++++ b/scripts/browser-client.js
+@@ -10,26 +10,36 @@
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
+  * governing permissions and limitations under the License.
+  */
++// Fetch env data from server
++var env = {};
++
+ var services = [ {
+-    'url' : 'http://hola-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/api/hola',
+-    'id' : 'hola-service'
++    'url' : '/api/hola',
++    'id' : 'hola-service',
++		'port': 'HOLA_PORT'
+ }, {
+-    'url' : 'http://bonjour-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/api/bonjour',
+-    'id' : 'bonjour-service'
++    'url' : '/api/bonjour',
++    'id' : 'bonjour-service',
++		'port': 'BONJOUR_PORT'
+ }, {
+-    'url' : 'http://hello-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/api/hello',
+-    'id' : 'hello-service'
++    'url' : '/api/hello',
++    'id' : 'hello-service',
++		'port': 'HELLO_PORT'
+ }, {
+-    'url' : 'http://aloha-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/api/aloha',
+-    'id' : 'aloha-service'
++    'url' : '/api/aloha',
++    'id' : 'aloha-service',
++		'port': 'ALOHA_PORT'
+ }, {
+-    'url' : 'http://ola-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/api/ola',
+-    'id' : 'ola-service'
++    'url' : '/api/ola',
++    'id' : 'ola-service',
++		'port': 'OLA_PORT'
+ }, {
+-    'url' : 'http://namaste-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/api/namaste',
+-    'id' : 'namaste-service'
++    'url' : '/api/namaste',
++    'id' : 'namaste-service',
++		'port': 'NAMASTE_PORT'
+ }, ];
+ 
++
+ function invoke_ajax(url, id) {
+     $.ajax({
+         url : url,
+@@ -50,10 +60,19 @@ function browser_query() {
+     }
+     //Make the invocation
+     for (var x = 0; x < services.length; x++) {
+-        invoke_ajax(services[x].url, services[x].id)
++        invoke_ajax('http://' + env["HOSTIP"] + ':' + env[services[x].port] + services[x].url, services[x].id)
+     }
++
+ };
+ 
+ $(document).ready(function() {
+-    browser_query();
++    $.ajax({
++        url: document.URL + 'env',
++        success: function (result) {
++            env = result.env;
++        },
++        async: false
++    });
++ 
++   browser_query();
+ });
+diff --git a/scripts/service-chain.js b/scripts/service-chain.js
+index 8ed1ca7..1e9cc2a 100644
+--- a/scripts/service-chain.js
++++ b/scripts/service-chain.js
+@@ -13,7 +13,7 @@
+ 
+ function chain_query() {
+         $.ajax({
+-            url : 'http://hello-helloworld-msa.rhel-cdk.10.1.2.2.xip.io/api/hello-chaining',
++            url : 'http://' + env.HOSTIP + ':' + env.HELLO_PORT  + '/api/hello-chaining',
+             cache : false,
+             success : function(data) {
+                 $('#service-chain').empty();
+@@ -32,5 +32,16 @@ function chain_query() {
+ };
+ 
+ $(document).ready(function() {
++
++    $.ajax({
++        url: document.URL + 'env',
++        success: function (result) {
++            env = result.env;
++        },
++        async: false
++    });
++
++
++
+     chain_query();
+ });
